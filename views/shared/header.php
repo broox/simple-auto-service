@@ -23,6 +23,7 @@ require_once(SITE_PATH.'/app.php');
 
                 <ul class="nav">
                     <li class="active"><a href="<?php echo SITE_URL; ?>">Home</a></li>
+                    <li><a href="<?php echo SITE_URL; ?>/cars/new">New car</a></li>
                 </ul>
             </div>
         </div>
