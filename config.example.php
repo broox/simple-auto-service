@@ -1,6 +1,7 @@
 <?php
 define('SITE_TITLE', 'Simple Auto Service');
 define('SITE_URL', 'http://localhost');
+define('SITE_PATH', $_SERVER['DOCUMENT_ROOT']);
 
 /* Define some MySQL connection parameters either here or as application environment variables */
 define('DB_NAME', isset($_SERVER['AUTO_DB_NAME']) ? $_SERVER['AUTO_DB_NAME'] : 'auto_service');
