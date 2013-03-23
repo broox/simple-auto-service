@@ -1,0 +1,1 @@
+Requires PHP 5.3 as it uses Late Static Binding for the models.

@@ -1,5 +1,4 @@
 <?php
-require_once './db.php';
 
 /*
  * A super basic Model class to support simple CRUD functionality.
@@ -8,7 +7,7 @@ class Model {
     protected static $db;
     private $_changedFields;
 
-    protected $_table;
+    protected static $_table;
     protected $_fields = array();
 
     public function __construct($reference = null) {
@@ -24,17 +23,25 @@ class Model {
     }
 
     /*
+     * Get the table definition from the static child class
+     */
+    public function table() {
+        return static::$_table;
+    }
+
+    /*
      * Load an object up from the DB by ID or slug
      * Also supports loading an object from a given array or object
      */
     public function load($reference) {
         if ($reference != null) {
             global $db;
-            
+            $table = $this->table();
+
             if (is_numeric($reference))
-                $params = $db->get_row('SELECT * FROM '.$this->_table.' WHERE id = '.$reference);
+                $params = $db->get_row('SELECT * FROM '.$table.' WHERE id = '.$reference);
             elseif (is_string($reference))
-                $params = $db->get_row('SELECT * FROM '.$this->_table.' WHERE slug = "'.$reference.'"');
+                $params = $db->get_row('SELECT * FROM '.$table.' WHERE slug = "'.$reference.'"');
             elseif (is_array($reference) || is_object($reference))
                 $params = $reference;
 
@@ -71,14 +78,9 @@ class Model {
 
     /*
      * Retrieve a single item in a collection based on some query arguments
-     * This is ghetto in that it requires an index() method on the child object.
+     * Takes the same arguments as Model::index();
      */
     public static function one(array $kwargs = array()) {
-        if (!method_exists(get_called_class(),'index')) {
-            error_log('[WARN] '.get_called_class().'::index() does not exist');
-            return false;
-        }
-
         $kwargs['limit'] = 1;
         $one = static::index($kwargs);
         if (!$one)
@@ -102,11 +104,89 @@ class Model {
     }
 
     /*
+     * Count the amount of objects for a given model
+     *
+     * Params
+     * - 0: an optional kwargs array defining the query conditions
+     *
+     * Examples
+     * - Model::count();
+     * - Model::count('slug = "danger"');
+     * - Model::count('slug = ?', $dirtyValue);
+     */
+    public static function count($conditions = null) {
+        global $db;
+        $table = static::$_table;
+        $params = array();
+        $sql = array('SELECT count(id) FROM '.$table);
+
+        if (!empty($conditions)) {
+            $sql[] = 'AND '.$conditions[0];
+            for ($i = 1; $i < count($conditions); $i++) {
+                $params[] = $conditions[$i];
+            }
+        }
+
+        return $db->get_count(implode(' ',$sql), $params);
+    }
+
+    /*
+     * Retrieve a collection of objects for a given model
+     *
+     * Params
+     * - 0: an optional kwargs array defining the query
+     *
+     * Possible kwargs
+     * - offset: the position to start retrieving records
+     * - limit: the number of objects to retrieve
+     * - order: a string defining the mysql sort order
+     * - conditions: a kwargs array defining the query conditions
+     *
+     * Examples
+     * - Model::index();
+     * - Model::index(array('conditions' => array('slug = ?', $radical),
+     *                      'offset' => 10,
+     *                      'limit' => 20,
+     *                      'order' => 'slug ASC'));
+     */
+    public static function index(array $kwargs = array()) {
+        global $db;
+        $table = static::$_table;
+
+        extract(array_merge(array('offset' => 0,
+                                  'limit'  => 100,
+                                  'order'  => 'created_at DESC'), $kwargs));
+
+        $sql = array('SELECT * FROM '.$table);
+        $params = array();
+        $list = array();
+
+        $sql[] = 'WHERE 1';
+        if (!empty($conditions)) {
+            $sql[] = 'AND '.$conditions[0];
+            for ($i = 1; $i < count($conditions); $i++) {
+                $params[] = $conditions[$i];
+            }
+        }
+        $sql[] = 'ORDER BY '.$order.' LIMIT ?,?';
+        $params[] = $offset;
+        $params[] = $limit;
+
+        $results = $db->query(implode(' ',$sql),$params);
+        while ($row = $db->fetch_object($results)) {
+            $list[] = new static($row);
+        }
+        return $list;
+    }
+
+    /*
      * Creates an object in the database
      */
     public function create() {
         global $db;
-        if (empty($this->_table)) { error_log('[WARN] Table name is not defined on object'); return false; }
+        $table = $this->table();
+
+        if (empty($table)) { error_log('[WARN] Table name is not defined on object'); return false; }
         if (empty($this->_fields)) { error_log('[WARN] Fields are not defined on object'); return false; }
 
         $params = array();
@@ -119,7 +199,7 @@ class Model {
         }
         if (empty($params)) { error_log('[WARN] Cannot create object with no parameters'); return false; }
 
-        $sql = 'INSERT INTO '.$this->_table.' ('.implode(', ',array_keys($params));
+        $sql = 'INSERT INTO '.$table.' ('.implode(', ',array_keys($params));
         if (in_array('createdAt',$this->_fields) && !array_key_exists('created_at',$params)) { $sql.= ',created_at'; }
 
         $sql.= ') VALUES ('.implode(',',array_fill(0,count($params),'?'));
@@ -137,11 +217,11 @@ class Model {
      * - 0: a string representing the attribute name
      * - 1: a string representing the attribute value
      * - 2: a boolean specifying whether or not the attribute should be immediately saved to the DB.
-     *            Defaults to true.
+     *      Defaults to true.
      */
     public function updateAttribute($key, $value, $save = true) {
         if ($key == 'id') return false;
-        if (!in_array($key,$this->_fields)) return false;
+        if (!in_array($key, $this->_fields)) { error_log('[WARN] Property ['.$key.'] does not exist on object'); return false; }
         if (is_string($value)) $value = stripslashes($value);
 
         if ($this->$key == $value) return false;
@@ -184,11 +264,13 @@ class Model {
      */
     public function update() {
         global $db;
-        if (empty($this->_table)) { error_log('[WARN] Table name is not defined on object'); return false; }
+        $table = $this->table();
+
+        if (empty($table)) { error_log('[WARN] Table name is not defined on object'); return false; }
         if (empty($this->_fields)) { error_log('[WARN] Fields are not defined on object'); return false; }
 
         //let's only update if updateAttributes actually updated any attributes... 
-        if (empty($this->_changedFields)) { /* error_log('[DBUG] No fields were changed'); */ return $this; }
+        if (empty($this->_changedFields)) { error_log('[WARN] No fields were changed'); return $this; }
 
         $params = array();
         foreach($this->_changedFields as $key => $values) {
@@ -200,7 +282,7 @@ class Model {
         unset($params['id']);
         //unset($params['created_at']);
 
-        $sql = 'UPDATE '.$this->_table.' SET '.join(' = ?, ',array_keys($params)).' = ? ';
+        $sql = 'UPDATE '.$table.' SET '.join(' = ?, ',array_keys($params)).' = ? ';
         if (in_array('updatedAt',$this->_fields) && !array_key_exists('updated_at',$params))
             $sql.= ', updated_at = UTC_TIMESTAMP() ';
         $sql.= 'WHERE id = '.$this->id.' LIMIT 1';
@@ -215,15 +297,17 @@ class Model {
      */
     public function delete() {
         global $db;
-        if (empty($this->_table)) { error_log('[WARN] Table name is not defined on object'); return false; }
+        $table = $this->table();
+
+        if (empty($table)) { error_log('[WARN] Table name is not defined on object'); return false; }
         if (empty($this->_fields)) { error_log('[WARN] Fields are not defined on object'); return false; }
         if (empty($this->id)) { error_log('[WARN] Cannot delete an object without an ID'); return false;}
 
         // Remove any associated Tags, Comments, and Check Ins
         if (!empty($this->contentTypeID)) {
             $params = array($this->id,$this->contentTypeID);
-            $db->query('DELETE FROM derek_taggings    WHERE attached_id = ? AND attached_type = ?',$params);
-            $db->query('DELETE FROM derek_comments    WHERE attached_id = ? AND attached_type = ?',$params);
+            $db->query('DELETE FROM derek_taggings WHERE attached_id = ? AND attached_type = ?',$params);
+            $db->query('DELETE FROM derek_comments WHERE attached_id = ? AND attached_type = ?',$params);
         }
 
         // Remove any associated Check Ins
@@ -232,9 +316,72 @@ class Model {
         }
 
         // Delete object
-        $db->query('DELETE FROM '.$this->_table.' WHERE id = ? LIMIT 1',$this->id);
+        $db->query('DELETE FROM '.$table.' WHERE id = ? LIMIT 1',$this->id);
         return true;
     }
 
+    /*
+     * Generates a "slug" identifier for the current object
+     *
+     * Params
+     * - 0: a string or an array representing the fields to build the slug from
+     *
+     * Examples
+     * - Model::generateSlug('title');
+     * - Model::generateSlug('id','title','name');
+     */
+    public function generateSlug() {
+        global $db;
+        $table = $this->table();
+
+        if (empty($table)) { error_log('[WARN] Table name is not defined on object'); return false; }
+        if (empty($this->_fields)) { error_log('[WARN] Fields are not defined on object'); return false; }
+
+        $properties = func_get_args();
+        if (empty($properties)) {
+            $properties = array('id');
+        } elseif (is_array($properties[0])) {
+            $properties = $properties[0];
+        }
+
+        $parts = array();
+        foreach ($properties as $property) {
+            if (empty($this->$property)) { error_log('[WARN] '.$property.' is not set on object'); }
+            $parts[] = $this->$property;
+        }
+        $title = implode(' ', $parts);
+        if (empty($title)) { error_log('[WARN] Generated a blank slug with the defined properties'); return false; }
+
+        $rawSlug = strip_tags($title);
+        $rawSlug = strtolower($rawSlug);
+        $rawSlug = preg_replace('/&.+?;/', '', $rawSlug); // kill entities
+        $rawSlug = preg_replace('/[^%a-z0-9 _-]/', '', $rawSlug);
+        $rawSlug = preg_replace('/\s+/', '-', $rawSlug);
+        $rawSlug = preg_replace('|-+|', '-', $rawSlug);
+        $rawSlug = trim($rawSlug,'-');
+        if (is_numeric($rawSlug)) { $rawSlug.='_'; }
+        $this->slug = $rawSlug;
+
+        // try raw slug
+        $count = $db->get_count('SELECT * FROM '.$table.' WHERE slug = ?',$rawSlug);
+        if ($count == 0) { return $this->slug; }
+
+        // append some consecutive number to make it unique if needed
+        for($i = 2; $i < 20; $i++) {
+          $this->slug = $rawSlug.'-'.$i;
+          $count = $db->get_count('SELECT count(*) FROM '.$table.' WHERE slug = ?',$this->slug);
+          if ($count == 0) { return $this->slug; }
+        }
+    }
+
+    /*
+     * Update the current object's slug and save it in the DB.
+     * This takes the same parameters as Model::generateSlug()
+     */
+    public function updateSlug() {
+        $slug = $this->generateSlug(func_get_args());
+        $this->slug = NULL; // so it will actually save.
+        $this->updateAttribute('slug', $slug, true);
+    }
 }
 ?>

@@ -25,7 +25,37 @@
       </div>
     </div>
 
-    <div class="container">
+    <div class="container" style="margin-top:100px">
+      <?php
+      $currentCars = Car::current();
+      ?>
+
+      <h1>There are <?= Car::count() ?> cars</h1>
+      <div class="row">
+        <div class="span3">
+          <ul class="nav nav-list">
+            <?php foreach ($currentCars as $car) { ?>
+              <li>
+                <a href="<?php echo $car->url(); ?>"><?php echo $car->title(); ?></a>
+              </li>
+            <?php } ?>
+          </ul>
+        </div>
+        <div class="span9">
+          <pre>
+          <?php
+          print_r(Car::index());
+          ?>
+          </pre>
+        </div>
+      </div>
+      <br>bye
+    </div>
+
+    <div id="footer">
+      <div class="container">
+        <p class="muted credit">Built by <a href="http://www.broox.com">Derek Brooks</a>.</p>
+      </div>
     </div>
 
     <script src="/assets/js/jquery.js"></script>
