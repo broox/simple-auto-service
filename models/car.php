@@ -23,8 +23,9 @@ class Car extends Model {
      * This car's title
      */
     public function title() {
-        $title = array($this->year, $this->make, $this->model, $this->trim);
-        return implode(' ', rejectEmptyArrayValues($title));
+        $parts = array($this->year, $this->make, $this->model, $this->trim);
+        $title = implode(' ', rejectEmptyArrayValues($parts));
+        return empty($title) ? 'Unknown car' : $title;
     }
 
     /*
