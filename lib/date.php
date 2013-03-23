@@ -16,7 +16,7 @@ class Date {
                 $this->_datetime = $datetime->datetime();
             }
         } elseif (!empty($datetime)) {
-            $this->_datetime = new DateTime($date);
+            $this->_datetime = new DateTime($datetime);
         } else {
             $this->_datetime = new DateTime();
         }

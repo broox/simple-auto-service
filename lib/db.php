@@ -68,7 +68,7 @@ class db {
 
         $result = $this->query($query, $binds);
         if ($result) {
-            $this->fetch_object($result);
+            $row = $this->fetch_object($result);
             return $row;
         }
         else

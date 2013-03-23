@@ -39,9 +39,9 @@ class Model {
             $table = $this->table();
 
             if (is_numeric($reference))
-                $params = $db->get_row('SELECT * FROM '.$table.' WHERE id = '.$reference);
+                $params = $db->get_row('SELECT * FROM '.$table.' WHERE id = ?', $reference);
             elseif (is_string($reference))
-                $params = $db->get_row('SELECT * FROM '.$table.' WHERE slug = "'.$reference.'"');
+                $params = $db->get_row('SELECT * FROM '.$table.' WHERE slug = ?', $reference);
             elseif (is_array($reference) || is_object($reference))
                 $params = $reference;
 
