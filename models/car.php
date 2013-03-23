@@ -36,6 +36,10 @@ class Car extends Model {
         return SITE_URL.'/cars/'.$id.'/';
     }
 
+    public function editURL() {
+        return $this->url().'edit';
+    }
+
     /*
      * A collection of cars that aren't retired
      */
