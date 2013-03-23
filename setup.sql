@@ -1,6 +1,6 @@
 CREATE TABLE `cars` (
   `id` int(9) NOT NULL auto_increment,
-  `slug` int(100) NOT NULL,
+  `slug` varchar(100) NOT NULL,
   `year` int(4) NOT NULL,
   `make` varchar(100),
   `model` varchar(100),
