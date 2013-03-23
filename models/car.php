@@ -32,7 +32,8 @@ class Car extends Model {
      * This car's URL
      */
     public function url() {
-        return SITE_URL.'/cars/'.$this->slug.'/';
+        $id = empty($this->slug) ? $this->id : $this->slug;
+        return SITE_URL.'/cars/'.$id.'/';
     }
 
     /*

@@ -6,4 +6,5 @@
 
     RewriteRule ^cars/new?$                 views/cars/new.php
     RewriteRule ^cars/([_0-9a-z-]+)/?$      views/cars/show.php?slug=$1
+    RewriteRule ^cars/([_0-9a-z-]+)/edit?$  views/cars/edit.php?slug=$1
 </IfModule>
