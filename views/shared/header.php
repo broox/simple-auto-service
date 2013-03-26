@@ -11,7 +11,8 @@ require_once(SITE_PATH.'/app.php');
 
         <!-- Bootstrap -->
         <link href="/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
-        <link href="/assets/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+        <link href="/assets/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+        <link href="/assets/bootstrap/css/bootstrap-extensions.css" rel="stylesheet">
     </head>
 
     <body>

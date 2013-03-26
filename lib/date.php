@@ -29,12 +29,27 @@ class Date {
         return $this->_datetime;
     }
 
-    // Format the datetime for MySQL, optionally convert to a timezone
-    function mysqlDateTime($timezone = false) {
+    /*
+     * Format the datetime for MySQL, optionally convert to a timezone
+     *
+     * Params
+     * - 0: A timezone to convert this DateTime to while formatting it for MySQL
+     */
+    public function mysqlDateTime($timezone = false) {
         if ($timezone) {
             $this->_datetime->setTimezone(new DateTimeZone($timezone));
         }
-        return $this->_datetime->format("Y-m-d H:i:s");
+        return $this->_datetime->format('Y-m-d H:i:s');
+    }
+
+    /*
+     * Format this particular Date object
+     *
+     * Params
+     * - 0: The desired format to convert this DateTime to
+     */
+    public function format($format = 'Y-m-d H:i:s') {
+        return $this->_datetime->format($format);
     }
 
 }

@@ -19,6 +19,8 @@ class Car extends Model {
     protected static $_table = 'cars';
     protected $_fields = array('id','slug','year','make','model','trim','retired_on','createdAt','updatedAt');
 
+    private $_serviceLogs = NULL;
+
     /*
      * This car's title
      */
@@ -38,6 +40,22 @@ class Car extends Model {
 
     public function editURL() {
         return $this->url().'edit';
+    }
+
+    public function serviceLogs() {
+        if (empty($_serviceLogs))
+            $_serviceLogs = CarService::index(array('conditions' => array('car_id = ?', $this->id),
+                                                    'order' => 'serviced_at ASC'));
+
+        return $_serviceLogs;
+    }
+
+    public function totalCost() {
+        $cost = 0;
+        foreach ($this->serviceLogs() as $log)
+            $cost += $log->totalCost();
+
+        return $cost;
     }
 
     /*

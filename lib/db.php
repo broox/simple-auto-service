@@ -91,7 +91,6 @@ class db {
         $result = $this->query($query,$binds);
         if ($result) {
             $row = $this->fetch_row($result);
-            //$row = $result->fetch_row();
             return $row[0];
         }
         else
