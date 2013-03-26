@@ -9,6 +9,12 @@ define('DB_USER', isset($_SERVER['AUTO_DB_USER']) ? $_SERVER['AUTO_DB_USER'] : '
 define('DB_PASSWORD', isset($_SERVER['AUTO_DB_PASS']) ? $_SERVER['AUTO_DB_PASS'] : 'password');
 define('DB_HOST', isset($_SERVER['AUTO_DB_HOST']) ? $_SERVER['AUTO_DB_HOST'] : 'localhost');
 
-/* Set the local for money_format() */
+/* Set your local timezone */
+define('TIMEZONE', 'America/Chicago');
+
+/* Set the local timezone as the default */
+date_default_timezone_set(TIMEZONE);
+
+/* Set the locale for money_format() */
 setlocale(LC_MONETARY, 'en_US');
 ?>

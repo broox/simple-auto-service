@@ -34,11 +34,10 @@ class Date {
      *
      * Params
      * - 0: A timezone to convert this DateTime to while formatting it for MySQL
+     *      Defaults to UTC
      */
-    public function mysqlDateTime($timezone = false) {
-        if ($timezone) {
-            $this->_datetime->setTimezone(new DateTimeZone($timezone));
-        }
+    public function mysqlDateTime($timezone = 'UTC') {
+        $this->_datetime->setTimezone(new DateTimeZone($timezone));
         return $this->_datetime->format('Y-m-d H:i:s');
     }
 
@@ -47,8 +46,11 @@ class Date {
      *
      * Params
      * - 0: The desired format to convert this DateTime to
+     * - 1: TimeZone to display the date in
+     *      Defaults to local timezone
      */
-    public function format($format = 'Y-m-d H:i:s') {
+    public function format($format = 'Y-m-d H:i:s', $timezone = TIMEZONE) {
+        $this->_datetime->setTimezone(new DateTimeZone($timezone));
         return $this->_datetime->format($format);
     }
 
