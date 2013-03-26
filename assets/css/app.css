@@ -1,7 +1,47 @@
 /* bootstrap extensions */
 .table th.text-right, .table td.text-right { text-align: right; }
 
+/* application */
+tbody#serviceLogs tr.editable { cursor: pointer; }
 th, td.cost { white-space: nowrap; }
 
-/* application */
-tbody#serviceLogs tr { cursor: pointer; }
+/* Make service log table "responsive" */
+p.parts-from { display:none !important; }
+p.serviced-by { display:none !important; }
+
+p.parts-cost { display:none !important; }
+p.service-cost { display:none !important; }
+
+tr.details { display:none !important; }
+
+td.total-pad-768 { display:none !important; }
+td.total-pad-1024 { display:none !important; }
+
+/* Move "Parts from" and "Serviced by" into parts/service columns below 1024 */
+@media only screen and (max-width: 1024px) {
+    th.parts-from, td.parts-from { display:none !important; }
+    th.serviced-by, td.serviced-by { display:none !important; }
+
+    p.parts-from { display:block !important; }
+    p.serviced-by { display:block !important; }
+
+    td.total-pad-full { display:none !important; }
+    td.total-pad-1024 { display:table-cell !important; }
+}
+
+/* Condense all parts and service details into 1 column on displays below 768px */
+@media only screen and (max-width: 768px) {
+    tr.details { display:table-row !important; }
+
+    th.parts, td.parts { display:none !important; }
+    th.service, td.service { display:none !important; }    
+
+    th.parts-cost, td.parts-cost { display:none !important; }
+    th.service-cost, td.service-cost { display:none !important; }
+
+    p.parts-cost { display:block !important; }
+    p.service-cost { display:block !important; }
+
+    td.total-pad-1024 { display:none !important; }
+    td.total-pad-768 { display:table-cell !important; }
+}

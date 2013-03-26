@@ -34,17 +34,26 @@ require_once '../shared/header.php';
             <tr class="editable" data-service-url="<?php echo $serviceLog->editURL() ?>">
                 <td><?php echo $serviceLog->servicedAt->format('m/d/y'); ?></td>
                 <td><?php echo formatMileage($serviceLog->mileage); ?></td>
-                <td class="parts"><?php echo $serviceLog->parts; ?></td>
+
+                <td class="parts"><?php echo formatParts($serviceLog); ?></td>
                 <td class="parts-from"><?php echo $serviceLog->partsFrom; ?></td>
-                <td class="service"><?php echo $serviceLog->serviceDetails; ?></td>
+
+                <td class="service"><?php echo formatService($serviceLog);?></td>
                 <td class="serviced-by"><?php echo $serviceLog->servicedBy; ?></td>
+
                 <td class="text-right parts-cost cost"><?php echo formatCost($serviceLog->partsCost); ?></td>
                 <td class="text-right service-cost cost"><?php echo formatCost($serviceLog->serviceCost); ?></td>
                 <td class="text-right cost"><?php echo formatCost($serviceLog->totalCost()); ?></td>
             </tr>
+            <tr class="details editable" data-service-url="<?php echo $serviceLog->editURL() ?>">
+                <td colspan="3"><?php echo formatDetails($serviceLog) ?></td>
+            </tr>
         <?php } ?>
         <tr>
-            <td class="total-pad" colspan="8">&nbsp;</td>
+            <td class="total-pad-768" colspan="2">&nbsp;</td>
+            <td class="total-pad-1024" colspan="6">&nbsp;</td>
+            <td class="total-pad-full" colspan="8">&nbsp;</td>
+
             <td class="text-right total-cost cost"><strong><?php echo formatCost($car->totalCost()); ?></strong></td>
         </tr>
     </tbody>
@@ -58,3 +67,13 @@ require_once '../shared/header.php';
 </div>
 
 <?php require '../shared/footer.php'; ?>
+
+
+
+
+
+
+
+
+
+
