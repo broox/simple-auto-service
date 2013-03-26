@@ -1,6 +1,7 @@
 <?php
 require_once('../../config.php');
 require_once(SITE_PATH.'/app.php');
+$currentCars = Car::current();
 ?>
 <!DOCTYPE html>
 <html>
@@ -12,7 +13,7 @@ require_once(SITE_PATH.'/app.php');
         <!-- Bootstrap -->
         <link href="/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
         <link href="/assets/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
-        <link href="/assets/bootstrap/css/bootstrap-extensions.css" rel="stylesheet">
+        <link href="/assets/css/app.css" rel="stylesheet">
     </head>
 
     <body>
@@ -20,12 +21,27 @@ require_once(SITE_PATH.'/app.php');
     <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+
                 <a class="brand" href="<?php echo SITE_URL; ?>"><?php echo SITE_TITLE; ?></a>
 
-                <ul class="nav">
-                    <li class="active"><a href="<?php echo SITE_URL; ?>">Home</a></li>
-                    <li><a href="<?php echo SITE_URL; ?>/cars/new">New car</a></li>
-                </ul>
+                <div class="nav-collapse collapse">
+                    <ul class="nav">
+                        <li class="dropdown">
+                            <a href="#" data-toggle="dropdown">Cars</a>
+                            <ul class="dropdown-menu">
+                                <?php foreach ($currentCars as $car) { ?>
+                                    <li><a href="<?php echo $car->url() ?>"><?php echo $car->title() ?></a></li>
+                                <?php } ?>
+                            </ul>
+                        </li>
+                        <li><a href="<?php echo SITE_URL; ?>/cars/new">New car</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

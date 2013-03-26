@@ -8,19 +8,22 @@ if ($car->doesntExist()) {
 }
 
 if (!empty($_POST)) {
-    $car->updateAttributes($_POST);
-
-    if(!$car->update()) {
-        error_log('[WARN] failed to update car');
+    $carService = new CarService(datesToUTC($_POST));
+    if(!$carService->create()) {
+        error_log('[WARN] failed to create CarService');
+        echo 'error adding car service'; // TODO: church this up.
+    } else {
+        header('Location:'.$car->url());
     }
-    header('Location:'.$car->url());
 } else {
     require_once '../shared/header.php';
+    $carService = new CarService;
+    $carService->servicedAt = new Date();
     ?>
     <div class="row">
         <div class="span12">
 
-            <h1>Edit <?= $car->title() ?></h1>
+            <h1>Add a service log for the <?= $car->title() ?></h1>
 
             <form class="form-horizontal" action="<?= $_SERVER['REQUEST_URI'] ?>" method="POST">
                 <?php require_once './_form.php'; ?>
@@ -28,7 +31,7 @@ if (!empty($_POST)) {
                 <div class="control-group">
                     <div class="controls">
                         <a href="<?php echo $car->url(); ?>" class="btn">Cancel</a>
-                        <input type="submit" class="btn btn-primary" name="submit" value="Update car">
+                        <input type="submit" class="btn btn-primary" name="submit" value="Add service log">
                     </div>
                 </div>
             </form>

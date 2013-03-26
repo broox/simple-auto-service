@@ -22,8 +22,21 @@ class CarService extends Model {
     protected static $_table = 'car_services';
     protected $_fields = array('id','carID','mileage','servicedAt','servicedBy','serviceCost','parts','partsCost','partsFrom','serviceDetails','createdAt','updatedAt');
 
+    private $_car;
+
+    public function editURL() {
+        return SITE_URL.'/car_services/'.$this->id.'/edit';
+    }
+
     public function totalCost() {
         return $this->partsCost + $this->serviceCost;
+    }
+
+    public function car() {
+        if (empty($_car))
+            $_car = new Car($this->carID);
+
+        return $_car;
     }
 }
 ?>

@@ -12,7 +12,6 @@ require_once '../shared/header.php';
 ?>
 <h1>
     <?php echo $car->title() ?>
-    <small><a href="<?php echo $car->editURL() ?>">edit</a></small>
 </h1>
 
 
@@ -30,9 +29,9 @@ require_once '../shared/header.php';
             <th>Cost</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody id="serviceLogs">
         <?php foreach ($serviceLogs as $serviceLog) { ?>
-            <tr>
+            <tr class="editable" data-service-url="<?php echo $serviceLog->editURL() ?>">
                 <td><?php echo $serviceLog->servicedAt->format('m/d/y'); ?></td>
                 <td><?php echo formatMileage($serviceLog->mileage); ?></td>
                 <td class="parts"><?php echo $serviceLog->parts; ?></td>
@@ -50,5 +49,12 @@ require_once '../shared/header.php';
         </tr>
     </tbody>
 </table>
+
+<div class="control-group">
+    <div class="controls">
+        <a href="<?php echo $car->editURL() ?>" class="btn">Edit car</a>
+        <a href="<?php echo $car->serviceURL() ?>" class="btn btn-primary pull-right">Add service log</a>
+    </div>
+</div>
 
 <?php require '../shared/footer.php'; ?>

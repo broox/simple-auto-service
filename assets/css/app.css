@@ -1,0 +1,7 @@
+/* bootstrap extensions */
+.table th.text-right, .table td.text-right { text-align: right; }
+
+th, td.cost { white-space: nowrap; }
+
+/* application */
+tbody#serviceLogs tr { cursor: pointer; }

@@ -24,6 +24,7 @@ if (!empty($_POST)) {
 
                 <div class="control-group">
                     <div class="controls">
+                        <a href="<?php echo SITE_URL; ?>" class="btn">Cancel</a>
                         <input type="submit" class="btn btn-primary" name="submit" value="Add car">
                     </div>
                 </div>

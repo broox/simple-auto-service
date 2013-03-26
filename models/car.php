@@ -42,6 +42,10 @@ class Car extends Model {
         return $this->url().'edit';
     }
 
+    public function serviceURL() {
+        return $this->url().'service';
+    }
+
     public function serviceLogs() {
         if (empty($_serviceLogs))
             $_serviceLogs = CarService::index(array('conditions' => array('car_id = ?', $this->id),
@@ -74,7 +78,7 @@ class Car extends Model {
                                  'order' => 'created_at DESC'));
     }
 
-   /*
+    /*
      * Extend Model::create() to generate slugs
      */
     public function create() {
