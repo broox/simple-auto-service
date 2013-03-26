@@ -5,7 +5,7 @@ CREATE TABLE `cars` (
   `make` varchar(100),
   `model` varchar(100),
   `trim` varchar(100),
-  `retired_on` date,
+  `retired_at` datetime,
   `created_at` datetime,
   `updated_at` datetime,
   PRIMARY KEY  (`id`)

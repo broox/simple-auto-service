@@ -4,9 +4,11 @@
 
     DirectoryIndex views/main/index.php
 
-    RewriteRule ^cars/new?$                    views/cars/new.php
-    RewriteRule ^cars/([_0-9a-z-]+)/?$         views/cars/show.php?slug=$1
-    RewriteRule ^cars/([_0-9a-z-]+)/edit?$     views/cars/edit.php?slug=$1
+    RewriteRule ^cars/new?$                     views/cars/new.php
+    RewriteRule ^cars/([_0-9a-z-]+)/?$          views/cars/show.php?slug=$1
+    RewriteRule ^cars/([_0-9a-z-]+)/edit?$      views/cars/edit.php?slug=$1
+    RewriteRule ^cars/([_0-9a-z-]+)/retire?$    views/cars/retire.php?slug=$1
+    RewriteRule ^cars/([_0-9a-z-]+)/resurrect?$ views/cars/resurrect.php?slug=$1
 
     RewriteRule ^cars/([_0-9a-z-]+)/service?$  views/car_services/new.php?slug=$1
     RewriteRule ^car_services/([0-9]+)/edit?$  views/car_services/edit.php?id=$1

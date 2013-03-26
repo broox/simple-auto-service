@@ -8,7 +8,7 @@ if ($car->doesntExist()) {
 }
 
 if (!empty($_POST)) {
-    $car->updateAttributes($_POST);
+    $car->updateAttributes(datesToUTC($_POST));
 
     if(!$car->update()) {
         error_log('[WARN] failed to update car');
@@ -25,10 +25,27 @@ if (!empty($_POST)) {
             <form class="form-horizontal" action="<?= $_SERVER['REQUEST_URI'] ?>" method="POST">
                 <?php require_once './_form.php'; ?>
 
+                <?php if ($car->retired()) { ?>
+                    <div class="control-group">
+                        <label class="control-label" for="retiredAt">Retired</label>
+                        <div class="controls">
+                            <input type="text" id="retiredAt" name="retiredAt"
+                                   placeholder="<?php echo $car->retiredAt->mysqlDate(TIMEZONE); ?>"
+                                   value="<?php echo $car->retiredAt->mysqlDate(TIMEZONE); ?>">
+                        </div>
+                    </div>
+                <?php } ?>
+
                 <div class="control-group">
                     <div class="controls">
                         <a href="<?php echo $car->url(); ?>" class="btn">Cancel</a>
                         <input type="submit" class="btn btn-primary" name="submit" value="Update car">
+                        <?php if (!$car->retired()) { ?>
+                            <a href="<?php echo $car->retireURL() ?>" class="btn btn-danger btn-retire pull-right"
+                               data-confirmation="Are you sure you want to retire this car?">Retire car</a>
+                        <?php } else { ?>
+                            <a href="<?php echo $car->resurrectURL() ?>" class="btn btn-warning pull-right">Resurrect car</a>
+                        <?php } ?>
                     </div>
                 </div>
             </form>

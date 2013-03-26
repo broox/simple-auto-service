@@ -42,6 +42,18 @@ class Date {
     }
 
     /*
+     * Format the datetime as a MySQL date, optionally convert to a timezone
+     *
+     * Params
+     * - 0: A timezone to convert this DateTime to while formatting it for MySQL
+     *      Defaults to UTC
+     */
+    public function mysqlDate($timezone = 'UTC') {
+        $this->_datetime->setTimezone(new DateTimeZone($timezone));
+        return $this->_datetime->format('Y-m-d');
+    }
+
+    /*
      * Format this particular Date object
      *
      * Params

@@ -1,7 +1,7 @@
 <?php
 require_once('../../config.php');
 require_once(SITE_PATH.'/app.php');
-$currentCars = Car::current();
+$activeCars = Car::active();
 ?>
 <!DOCTYPE html>
 <html>
@@ -32,10 +32,10 @@ $currentCars = Car::current();
                 <div class="nav-collapse collapse">
                     <ul class="nav">
                         <li class="dropdown">
-                            <a href="#" data-toggle="dropdown">Cars</a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Cars</a>
                             <ul class="dropdown-menu">
-                                <?php foreach ($currentCars as $car) { ?>
-                                    <li><a href="<?php echo $car->url() ?>"><?php echo $car->title() ?></a></li>
+                                <?php foreach ($activeCars as $navCar) { ?>
+                                    <li><a href="<?php echo $navCar->url() ?>"><?php echo $navCar->title() ?></a></li>
                                 <?php } ?>
                             </ul>
                         </li>

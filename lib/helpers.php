@@ -72,6 +72,21 @@ function formatDetails($serviceLog) {
     return implode('', $html);
 }
 
+function formatLastServiced($car) {
+    $lastService = $car->lastService();
+
+    if (empty($lastService))
+        return NULL;
+
+    if (empty($lastService->servicedAt))
+        return NULL;
+
+    if (!is_a($lastService->servicedAt,'Date'))
+        return NULL;
+
+    return $lastService->servicedAt->format('m/d/y');
+}
+
 /*
  * Takes a hash and converts any datetimes in it to UTC
  * Assumes all date/times in it are local time!

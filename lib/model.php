@@ -62,9 +62,8 @@ class Model {
             if (substr($key,-3) == '_at' and !empty($value))
                     $value = ($value == '0000-00-00 00:00:00') ? NULL : new Date($value.' UTC');
 
-            if (substr($key,-3) == '_on' && !empty($value)) {
+            if (substr($key,-3) == '_on' and !empty($value))
                 $value = ($value == '0000-00-00') ? NULL : new Date($value.' UTC');
-            }
 
             $key = str_replace('_id','ID',$key);
             $key = camelCase($key);

@@ -9,7 +9,7 @@
 | make       | varchar(100) | YES  |     | NULL    |                |
 | model      | varchar(100) | YES  |     | NULL    |                |
 | trim       | varchar(100) | YES  |     | NULL    |                |
-| retired_on | date         | YES  |     | NULL    |                |
+| retired_at | datetime     | YES  |     | NULL    |                |
 | created_at | datetime     | YES  |     | NULL    |                |
 | updated_at | datetime     | YES  |     | NULL    |                |
 +------------+--------------+------+-----+---------+----------------+
@@ -17,7 +17,7 @@
 
 class Car extends Model {
     protected static $_table = 'cars';
-    protected $_fields = array('id','slug','year','make','model','trim','retired_on','createdAt','updatedAt');
+    protected $_fields = array('id','slug','year','make','model','trim','retiredAt','createdAt','updatedAt');
 
     private $_serviceLogs = NULL;
 
@@ -31,19 +31,61 @@ class Car extends Model {
     }
 
     /*
-     * This car's URL
+     * This car's URLs
      */
     public function url() {
         $id = empty($this->slug) ? $this->id : $this->slug;
         return SITE_URL.'/cars/'.$id.'/';
     }
 
+    /*
+     * The URL to edit this car
+     */
     public function editURL() {
         return $this->url().'edit';
     }
 
+    /*
+     * The URL to add service to this car
+     */
     public function serviceURL() {
         return $this->url().'service';
+    }
+
+    /*
+     * The URL to retire this car
+     */
+    public function retireURL() {
+        return $this->url().'retire';
+    }
+
+    /*
+     * The URL to resurrect a retired car
+     */
+    public function resurrectURL() {
+        return $this->url().'resurrect';
+    }
+
+    /*
+     * Is this car retired?
+     */
+    public function retired() {
+        return !empty($this->retiredAt);
+    }
+
+    /*
+     * Retire this car
+     */
+    public function retire() {
+        return $this->updateAttribute('retiredAt', new Date(), true);
+    }
+
+    /*
+     * Resurrect this car from being retired
+     */
+    public function resurrect() {
+        error_log('RESURRECT ME');
+        return $this->updateAttribute('retiredAt', NULL, true);
     }
 
     public function serviceLogs() {
@@ -52,6 +94,14 @@ class Car extends Model {
                                                     'order' => 'serviced_at ASC'));
 
         return $_serviceLogs;
+    }
+
+    public function lastService() {
+        if (empty($_lastService))
+            $_lastService = CarService::one(array('conditions' => array('car_id = ?', $this->id),
+                                                  'order' => 'serviced_at DESC',
+                                                  'limit 1'));
+        return $_lastService;
     }
 
     public function totalCost() {
@@ -65,16 +115,16 @@ class Car extends Model {
     /*
      * A collection of cars that aren't retired
      */
-    public static function current() {
-        return self::index(array('conditions' => array('retired_on IS NULL'),
+    public static function active() {
+        return self::index(array('conditions' => array('retired_at IS NULL'),
                                  'order' => 'created_at ASC'));
     }
 
     /*
      * A collection of cars that have been retired
      */
-    public static function retired() {
-        return self::index(array('conditions' => array('retired_on IS NOT NULL'),
+    public static function inactive() {
+        return self::index(array('conditions' => array('retired_at IS NOT NULL'),
                                  'order' => 'created_at DESC'));
     }
 

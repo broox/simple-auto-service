@@ -10,10 +10,13 @@ if ($car->doesntExist()) {
 $serviceLogs = $car->serviceLogs();
 require_once '../shared/header.php';
 ?>
+
 <h1>
     <?php echo $car->title() ?>
+    <?php if ($car->retired()) { ?>
+        <small class="text-error">Retired on <?php echo $car->retiredAt->format('m/d/y'); ?></small>
+    <?php } ?>
 </h1>
-
 
 <table class="table table-striped table-bordered table-condensed table-hover">
     <thead>
