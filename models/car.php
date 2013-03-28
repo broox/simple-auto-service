@@ -31,7 +31,7 @@ class Car extends Model {
     }
 
     /*
-     * This car's URLs
+     * This car's URL
      */
     public function url() {
         $id = empty($this->slug) ? $this->id : $this->slug;
@@ -84,10 +84,12 @@ class Car extends Model {
      * Resurrect this car from being retired
      */
     public function resurrect() {
-        error_log('RESURRECT ME');
         return $this->updateAttribute('retiredAt', NULL, true);
     }
 
+    /*
+     * A collection of the service logs associated with this car
+     */
     public function serviceLogs() {
         if (empty($_serviceLogs))
             $_serviceLogs = CarService::index(array('conditions' => array('car_id = ?', $this->id),
@@ -96,6 +98,9 @@ class Car extends Model {
         return $_serviceLogs;
     }
 
+    /*
+     * The last service log associated with this car
+     */
     public function lastService() {
         if (empty($_lastService))
             $_lastService = CarService::one(array('conditions' => array('car_id = ?', $this->id),
@@ -104,6 +109,9 @@ class Car extends Model {
         return $_lastService;
     }
 
+    /*
+     * The total cost for the services logged to a given car
+     */
     public function totalCost() {
         $cost = 0;
         foreach ($this->serviceLogs() as $log)

@@ -2,6 +2,12 @@
 .table th.text-right, .table td.text-right { text-align: right; }
 .muted a { color: #999; }
 
+/* Handle content padding with Navbar */
+div#mainContent { margin-top:60px; }
+@media (max-width: 979px) {
+    div#mainContent { margin-top:auto; }
+}
+
 /* application */
 tbody#serviceLogs tr.editable { cursor: pointer; }
 th, td.cost { white-space: nowrap; }

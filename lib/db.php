@@ -2,11 +2,11 @@
 class db {
     var $conn;
     
-    public function db($db_user, $db_pass, $db_name, $db_host) {
-        $this->host = $db_host;
-        $this->user = $db_user;
-        $this->name = $db_name;
-        $this->password = $db_pass;
+    public function db($user, $password, $name, $host) {
+        $this->host = $host;
+        $this->user = $user;
+        $this->name = $name;
+        $this->password = $password;
         $this->connect();
     }
 
@@ -21,7 +21,7 @@ class db {
         mysqli_close($this->conn);
     }
 
-    public function select_db($db_name) {
+    public function selectDB($db_name) {
         mysql_select_db($db_name) or
             die(__FILE__."(Line: ".__LINE__."): ".mysql_errno()." - ".mysql_error());
     }
@@ -34,7 +34,7 @@ class db {
         }
 
         if (isset($binds) && $binds != null)
-            $query = $this->compile_binds($query, $binds);
+            $query = $this->compileBinds($query, $binds);
 
         if (!$this->conn->multi_query($query)) {
             error_log('[WARN] '.$this->conn->error.' - '.$query.' @ '.$_SERVER['SCRIPT_NAME']);
@@ -54,11 +54,11 @@ class db {
         return $this->result;
     }
 
-    public function insert_id() {
+    public function insertID() {
         return $this->conn->insert_id;
     }
 
-    public function get_row($query) {
+    public function getRow($query) {
         $binds = null;
         if (func_num_args() > 1) {
             $argv = func_get_args();
@@ -68,56 +68,56 @@ class db {
 
         $result = $this->query($query, $binds);
         if ($result) {
-            $row = $this->fetch_object($result);
+            $row = $this->fetchObject($result);
             return $row;
         }
         else
             return null;
     }
 
-    public function get_count($query) {
+    public function getCount($query) {
         if (func_num_args() > 1) { 
             $argv = func_get_args(); 
             $binds = (is_array(next($argv))) ? current($argv) : array_slice($argv, 1); 
         } else $binds = null;
-        return $this->get_var($query,$binds);
+        return $this->getVar($query,$binds);
     }
 
-    public function get_var($query) {
+    public function getVar($query) {
         if (func_num_args() > 1) { 
             $argv = func_get_args(); 
             $binds = (is_array(next($argv))) ? current($argv) : array_slice($argv, 1); 
         } else $binds = null;
         $result = $this->query($query,$binds);
         if ($result) {
-            $row = $this->fetch_row($result);
+            $row = $this->fetchRow($result);
             return $row[0];
         }
         else
             return null;
     }
 
-    public function num_rows($result) {
+    public function numRows($result) {
         return $result->num_rows;
     }
 
-    public function num_fields($result) {
+    public function numFields($result) {
         return $result->num_fields();
     }
 
-    public function fetch_array($result) {
+    public function fetchArray($result) {
         return $result->fetch_array();
     }
 
-    public function fetch_row($result) {
+    public function fetchRow($result) {
         return $result->fetch_row();
     }
 
-    public function fetch_object($result) {
+    public function fetchObject($result) {
         return $result->fetch_object();
     }
 
-    public function compile_binds($sql, $binds) { 
+    public function compileBinds($sql, $binds) {
         foreach ((array) $binds as $val) {
             // If the SQL contains no more bind marks ("?"), we're done.
             if (($next_bind_pos = strpos($sql, '?')) === FALSE)

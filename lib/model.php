@@ -1,7 +1,7 @@
 <?php
-
 /*
  * A super basic Model class to support simple CRUD functionality.
+ * Copyright Derek Brooks
  */
 class Model {
     protected static $db;
@@ -39,9 +39,9 @@ class Model {
             $table = $this->table();
 
             if (is_numeric($reference))
-                $params = $db->get_row('SELECT * FROM '.$table.' WHERE id = ?', $reference);
+                $params = $db->getRow('SELECT * FROM '.$table.' WHERE id = ?', $reference);
             elseif (is_string($reference))
-                $params = $db->get_row('SELECT * FROM '.$table.' WHERE slug = ?', $reference);
+                $params = $db->getRow('SELECT * FROM '.$table.' WHERE slug = ?', $reference);
             elseif (is_array($reference) || is_object($reference))
                 $params = $reference;
 
@@ -126,7 +126,7 @@ class Model {
             }
         }
 
-        return $db->get_count(implode(' ',$sql), $params);
+        return $db->getCount(implode(' ',$sql), $params);
     }
 
     /*
@@ -172,7 +172,7 @@ class Model {
         $params[] = $limit;
 
         $results = $db->query(implode(' ',$sql),$params);
-        while ($row = $db->fetch_object($results)) {
+        while ($row = $db->fetchObject($results)) {
             $list[] = new static($row);
         }
         return $list;
@@ -205,7 +205,7 @@ class Model {
         if (in_array('createdAt',$this->_fields) && !array_key_exists('created_at',$params)) { $sql.= ',UTC_TIMESTAMP()'; }
         $sql.= ')';
         $query = $db->query($sql,$params);
-        $this->__construct($db->insert_id());
+        $this->__construct($db->insertID());
         return true;
     }
 
@@ -362,13 +362,13 @@ class Model {
         $this->slug = $rawSlug;
 
         // try raw slug
-        $count = $db->get_count('SELECT * FROM '.$table.' WHERE slug = ?',$rawSlug);
+        $count = $db->getCount('SELECT * FROM '.$table.' WHERE slug = ?',$rawSlug);
         if ($count == 0) { return $this->slug; }
 
         // append some consecutive number to make it unique if needed
         for($i = 2; $i < 20; $i++) {
           $this->slug = $rawSlug.'-'.$i;
-          $count = $db->get_count('SELECT count(*) FROM '.$table.' WHERE slug = ?',$this->slug);
+          $count = $db->getCount('SELECT count(*) FROM '.$table.' WHERE slug = ?',$this->slug);
           if ($count == 0) { return $this->slug; }
         }
     }

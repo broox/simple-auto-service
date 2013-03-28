@@ -2,7 +2,7 @@
 
     <div id="footer">
       <div class="container">
-        <p class="muted credit">Built by <a href="http://www.broox.com">Derek Brooks</a>.</p>
+        <p class="muted credit text-center">Built by <a href="http://www.broox.com">Derek Brooks</a>.</p>
       </div>
     </div>
 

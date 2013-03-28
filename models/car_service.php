@@ -24,14 +24,23 @@ class CarService extends Model {
 
     private $_car;
 
+    /*
+     * The URL to edit this service
+     */
     public function editURL() {
         return SITE_URL.'/car_services/'.$this->id.'/edit';
     }
 
+    /*
+     * The total cost for this service (parts + service fee)
+     */
     public function totalCost() {
         return $this->partsCost + $this->serviceCost;
     }
 
+    /*
+     * The car associated with this service
+     */
     public function car() {
         if (empty($_car))
             $_car = new Car($this->carID);

@@ -18,32 +18,27 @@ $activeCars = Car::active();
 
     <body>
 
-    <div class="navbar navbar-fixed-top">
+    <div class="navbar navbar-fixed-top navbar-inverse">
         <div class="navbar-inner">
             <div class="container">
-                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </a>
-
                 <a class="brand" href="<?php echo SITE_URL; ?>"><?php echo SITE_TITLE; ?></a>
 
-                <div class="nav-collapse collapse">
-                    <ul class="nav">
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Cars</a>
-                            <ul class="dropdown-menu">
+                <ul class="nav pull-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Cars <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <?php if (!empty($activeCars)) { ?>
                                 <?php foreach ($activeCars as $navCar) { ?>
                                     <li><a href="<?php echo $navCar->url() ?>"><?php echo $navCar->title() ?></a></li>
                                 <?php } ?>
-                            </ul>
-                        </li>
-                        <li><a href="<?php echo SITE_URL; ?>/cars/new">New car</a></li>
-                    </ul>
-                </div>
+                                <li class="divider"></li>
+                            <?php } ?>
+                            <li><a href="<?php echo SITE_URL; ?>/cars/new">New car</a></li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
 
-    <div class="container" style="margin-top:100px">
+    <div class="container" id="mainContent">

@@ -1,4 +1,8 @@
 <?php
+
+/*
+ * Make dollar bills look like dollar, dollar bills, y'all
+ */
 function formatCost($cost) {
     if ($cost == 0)
         return NULL;
@@ -6,6 +10,9 @@ function formatCost($cost) {
     return money_format('%n', $cost);
 }
 
+/*
+ * Add some commas to that mileage
+ */
 function formatMileage($mileage) {
     if ($mileage == 0)
         return NULL;
@@ -72,6 +79,9 @@ function formatDetails($serviceLog) {
     return implode('', $html);
 }
 
+/*
+ * Format a car's last service date
+ */
 function formatLastServiced($car) {
     $lastService = $car->lastService();
 
@@ -92,13 +102,13 @@ function formatLastServiced($car) {
  * Assumes all date/times in it are local time!
  */
 function datesToUTC($hash) {
-  foreach ($hash as $key => $value) {
-    if (substr($key,-2) != 'At' or empty($value))
-      continue;
+    foreach ($hash as $key => $value) {
+        if (substr($key,-2) != 'At' or empty($value))
+            continue;
 
-    $date = new Date($value);
-    $hash[$key] = $date->mysqlDateTime('UTC');
-  }
-  return $hash;
+        $date = new Date($value);
+        $hash[$key] = $date->mysqlDateTime('UTC');
+    }
+    return $hash;
 }
 ?>

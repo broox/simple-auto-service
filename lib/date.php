@@ -25,6 +25,9 @@ class Date {
         $this->_datetime->setTimezone(new DateTimeZone('UTC'));
     }
 
+    /*
+     * A helper method to return the datetime object
+     */
     public function datetime()  {
         return $this->_datetime;
     }
