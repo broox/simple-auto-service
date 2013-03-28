@@ -1,8 +1,8 @@
 # Simple Auto Service
 
-Years ago, I often found myself at a mechanic or auto-parts store needing to know the last time I performed a certain service on my vehicles. So I whipped up this tiny web-app to help me track and display this information.
+Years ago, I often found myself at a mechanic or auto-parts store needing to know the last time I performed a certain service on my vehicles. So I whipped up a tiny web-app to help track and display this information.
 
-I recently got bored while hanging out in airports and airplanes, so I decided to clean a bit of this old app up publish the code.
+Recently, I became bored while hanging out in airports and airplanes, so I decided to clean this old app up and publish the code.
 
 It's not that full featured, there's no validation/authentication, and the code's not the prettiest, but I've been using it for years.
 
@@ -18,6 +18,9 @@ Here it is.
 * Create a MySQL DB
 * Set it up by importing `setup.sql`
 * Rename `config.example.php` to `config.php` and configure the values accordingly
+* Put it somewhere
+* Add basic-auth
+* Begin adding cars and maintenance logs
 
 ## Notes on some missing features
 

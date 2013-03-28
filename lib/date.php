@@ -1,4 +1,10 @@
 <?php
+/*
+ * A weird date class that was intended to help with timezones.
+ * This is really not that useful aside from providing a base
+ * class that can be easily extended with methods like relativeTime(),
+ * etc
+ */
 class Date {
 
     private $_datetime;
