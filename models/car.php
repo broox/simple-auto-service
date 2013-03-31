@@ -9,6 +9,7 @@
 | make       | varchar(100) | YES  |     | NULL    |                |
 | model      | varchar(100) | YES  |     | NULL    |                |
 | trim       | varchar(100) | YES  |     | NULL    |                |
+| vin        | varchar(100) | YES  |     | NULL    |                |
 | retired_at | datetime     | YES  |     | NULL    |                |
 | created_at | datetime     | YES  |     | NULL    |                |
 | updated_at | datetime     | YES  |     | NULL    |                |
@@ -17,7 +18,7 @@
 
 class Car extends Model {
     protected static $_table = 'cars';
-    protected $_fields = array('id','slug','year','make','model','trim','retiredAt','createdAt','updatedAt');
+    protected $_fields = array('id','slug','year','make','model','trim','vin','retiredAt','createdAt','updatedAt');
 
     private $_serviceLogs = NULL;
 

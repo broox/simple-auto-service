@@ -18,6 +18,11 @@ require_once '../shared/header.php';
             <small class="text-error">Retired on <?php echo $car->retiredAt->format('m/d/y'); ?></small>
         <?php } ?>
     </h1>
+
+    <?php if (!empty($car->vin)) { ?>
+        <h2 class="muted"><?php echo $car->vin ?></h2>
+    <?php } ?>
+
     <table class="table table-striped table-bordered table-condensed table-hover">
         <thead>
             <tr>

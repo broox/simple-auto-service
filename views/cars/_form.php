@@ -25,3 +25,10 @@
         <input type="text" id="trim" name="trim" placeholder="SS" value="<?php echo $car->trim; ?>">
     </div>
 </div>
+
+<div class="control-group">
+    <label class="control-label" for="trim">VIN</label>
+    <div class="controls">
+        <input type="text" id="vin" name="vin" placeholder="<?php echo $car->vin; ?>" value="<?php echo $car->vin; ?>">
+    </div>
+</div>
