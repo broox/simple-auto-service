@@ -11,9 +11,9 @@ $activeCars = Car::active();
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <!-- Bootstrap -->
-        <link href="/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
-        <link href="/assets/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
-        <link href="/assets/css/app.css" rel="stylesheet">
+        <link href="<?php echo SITE_URL ?>/assets/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+        <link href="<?php echo SITE_URL ?>/assets/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+        <link href="<?php echo SITE_URL ?>/assets/css/app.css" rel="stylesheet">
     </head>
 
     <body>
